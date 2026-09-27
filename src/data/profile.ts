@@ -26,7 +26,7 @@ export const profile = {
   role: 'Backend Engineer',
   city: 'Hyderabad',
   timeZone: 'Asia/Kolkata',
-  email: 'pramodhkadam68@gmail.com',
+  email: 'pramodhkadam222@gmail.com',
   linkedin: 'https://www.linkedin.com/in/kadam-pramodh-88975432a',
   github: 'https://github.com/pramodh-del',
   availability: 'Open to backend roles',
