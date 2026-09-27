@@ -11,7 +11,8 @@ For each photo (JPEG, PNG or HEIC):
 
 Pass names to pick and order photos; otherwise every photo in the folder is used.
 --crop-bottom trims that fraction off the bottom edge, e.g. to remove a phone's
-date / location stamp. It is the only crop ever applied.
+date / location stamp. It is the only crop ever applied. A single photo can
+override it with name@fraction, e.g. IMG_1.jpg@0.08 or IMG_2.jpg@0.
 """
 
 import json
@@ -51,17 +52,25 @@ def main() -> None:
     src = Path(args[0])
     picks = args[1:]
     files = sorted(p for p in src.iterdir() if p.suffix.lower() in EXTS)
+    crops = {p.name: crop_bottom for p in files}
     if picks:
         by_name = {p.name: p for p in files}
-        files = [by_name[n] for n in picks]
+        chosen = []
+        for pick in picks:
+            name, _, frac = pick.partition("@")
+            if frac:
+                crops[name] = float(frac)
+            chosen.append(by_name[name])
+        files = chosen
 
     OUT.mkdir(parents=True, exist_ok=True)
     entries = []
     for i, path in enumerate(files, start=1):
         with Image.open(path) as raw:
             img = ImageOps.exif_transpose(raw).convert("RGB")
-        if crop_bottom:
-            img = img.crop((0, 0, img.width, round(img.height * (1 - crop_bottom))))
+        cut = crops[path.name]
+        if cut:
+            img = img.crop((0, 0, img.width, round(img.height * (1 - cut))))
         slug = f"photo-{i:02d}"
         for size in SIZES:
             # Saving without exif= / icc_profile= strips all metadata.

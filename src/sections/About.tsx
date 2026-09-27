@@ -43,7 +43,7 @@ export function About() {
         <Sticker
           key={t.year}
           className="ticket"
-          style={i === 0 ? { left: 0, top: 150 } : { right: 0, top: 190 }}
+          style={i === 0 ? { left: 12, top: 150 } : { right: 22, top: 190 }}
           rotate={t.rotate}
           bounds={ref}
           label={`${t.year}: ${t.caption}`}

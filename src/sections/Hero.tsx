@@ -177,7 +177,7 @@ export function Hero() {
         <Sticker className="float sticker" style={{ right: '4%', top: 190, background: 'var(--aws)' }} rotate={6} bounds={heroRef}>
           <Icon name="cloud" size={15} /> AWS Certified Cloud Practitioner
         </Sticker>
-        <Sticker className="float note" style={{ right: 0, top: 410 }} rotate={3} bounds={heroRef}>
+        <Sticker className="float note" style={{ right: 12, top: 410 }} rotate={3} bounds={heroRef}>
           <span className="hand note-text">Promoted to Analyst in under 2 years.</span>
         </Sticker>
         <Sticker className="float bot-sticker" style={{ left: '4%', top: 110 }} rotate={-3} bounds={heroRef} label="On-call bot">

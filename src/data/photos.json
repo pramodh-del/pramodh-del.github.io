@@ -9,11 +9,11 @@
   },
   {
     "id": "photo-02",
-    "width": 1125,
-    "height": 1425,
-    "color": "#8a8578",
-    "alt": "Stone walls zig-zagging up a dry grassy hill to a fort bastion, hikers on the trail",
-    "caption": "the long way up"
+    "width": 1500,
+    "height": 1840,
+    "color": "#acb1b8",
+    "alt": "Two macaques sitting on a stone parapet with hazy hills behind them",
+    "caption": "the locals"
   },
   {
     "id": "photo-03",
@@ -26,17 +26,49 @@
   {
     "id": "photo-04",
     "width": 1500,
-    "height": 1900,
-    "color": "#654b45",
-    "alt": "Orange and violet sunset sky over city rooftops, with parked scooters in silhouette",
-    "caption": "18:11, golden hour"
+    "height": 2000,
+    "color": "#a5a59d",
+    "alt": "Waves breaking over mossy rocks on a curved beach, green hills and palms under a pale evening sky",
+    "caption": "waves at dusk"
   },
   {
     "id": "photo-05",
+    "width": 1125,
+    "height": 1425,
+    "color": "#8a8578",
+    "alt": "Stone walls zig-zagging up a dry grassy hill to a fort bastion, hikers on the trail",
+    "caption": "the long way up"
+  },
+  {
+    "id": "photo-06",
+    "width": 1500,
+    "height": 1840,
+    "color": "#6f756c",
+    "alt": "A lone tree silhouetted against an orange sunset over green fields, under a big cloudy sky",
+    "caption": "fields at sundown"
+  },
+  {
+    "id": "photo-07",
     "width": 1500,
     "height": 1900,
     "color": "#58462e",
     "alt": "Glowing hot-air-balloon lanterns hanging over a yellow courtyard seen from a walkway at night",
     "caption": "balloons after dark"
+  },
+  {
+    "id": "photo-08",
+    "width": 1500,
+    "height": 1900,
+    "color": "#858d71",
+    "alt": "A monsoon stream rushing over dark rocks below a forested green hill on a cloudy day",
+    "caption": "monsoon, full flow"
+  },
+  {
+    "id": "photo-09",
+    "width": 1500,
+    "height": 1900,
+    "color": "#654b45",
+    "alt": "Orange and violet sunset sky over city rooftops, with parked scooters in silhouette",
+    "caption": "18:11, golden hour"
   }
 ]
