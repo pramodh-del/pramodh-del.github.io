@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { scrollToId, useLenis } from '../lib/lenis'
+import { TickerBand } from '../components/TickerBand'
 import { About } from '../sections/About'
 import { Hero } from '../sections/Hero'
 import { Contact, OffClock, SideBuilds, Stack } from '../sections/More'
@@ -26,6 +27,7 @@ export default function Home() {
     <main>
       <Hero />
       <About />
+      <TickerBand />
       <Work />
       <SideBuilds />
       <Stack />

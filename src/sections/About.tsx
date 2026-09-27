@@ -43,7 +43,9 @@ export function About() {
         <Sticker
           key={t.year}
           className="ticket"
-          style={i === 0 ? { left: 12, top: 150 } : { right: 22, top: 190 }}
+          placeClass="ticket-place"
+          place={i === 0 ? { left: 12, top: 150 } : { right: 22, top: 190 }}
+          depth={i === 0 ? 22 : 30}
           rotate={t.rotate}
           bounds={ref}
           label={`${t.year}: ${t.caption}`}

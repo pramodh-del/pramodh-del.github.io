@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react'
+import { createPortal } from 'react-dom'
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { cases, type CaseStudy } from '../data/profile'
 import { Diagram } from '../components/Diagrams'
@@ -187,7 +188,11 @@ export function Work() {
         ))}
       </div>
 
-      <AnimatePresence>{open && <CaseModal key={open.id} c={open} onClose={close} />}</AnimatePresence>
+      {/* Portal to <body> so the dialog sits above the sticky nav, outside main's stacking context. */}
+      {createPortal(
+        <AnimatePresence>{open && <CaseModal key={open.id} c={open} onClose={close} />}</AnimatePresence>,
+        document.body,
+      )}
     </section>
   )
 }

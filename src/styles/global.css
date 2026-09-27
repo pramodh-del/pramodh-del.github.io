@@ -70,6 +70,13 @@ button {
   outline-offset: 3px;
   border-radius: 4px;
 }
+/* Stickers drift with tilt / scatter and can be dragged near the edges; never let
+   that widen the page. clip (not hidden) keeps position: sticky working inside. */
+main {
+  overflow-x: clip;
+  /* Keeps dragged stickers and coverflow photos (which raise their z-index) under the nav. */
+  isolation: isolate;
+}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -488,6 +495,11 @@ section {
 .sticker-3d {
   will-change: transform;
 }
+.is-touch-draggable {
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
 .is-draggable {
   user-select: none;
   -webkit-user-select: none;
@@ -769,9 +781,11 @@ section {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-.ticket {
+.ticket-place {
   position: absolute;
   z-index: 4;
+}
+.ticket {
   width: 170px;
   background: #fff;
   border: 1.5px solid var(--ink);
@@ -1662,10 +1676,7 @@ footer {
   .group:nth-child(-n + 2) {
     border-bottom: 1.5px solid var(--ink);
   }
-  .ticket {
-    display: none;
-  }
-  .bot-sticker {
+  .ticket-place {
     display: none;
   }
 }
@@ -1834,7 +1845,7 @@ footer {
 }
 .photo-strip-item {
   flex: none;
-  width: min(72vw, 300px);
+  width: min(62vw, 280px);
   scroll-snap-align: center;
   text-align: left;
 }
@@ -1923,5 +1934,327 @@ footer {
     top: auto;
     bottom: calc(14px + env(safe-area-inset-bottom, 0px));
     translate: none;
+  }
+}
+
+/* The bot needs room beside the name; between phone and desktop layouts there isn't any. */
+@media (min-width: 761px) and (max-width: 980px) {
+  .bot-sticker {
+    display: none;
+  }
+}
+
+.sticker.tone-spring {
+  background: var(--spring);
+}
+.sticker.tone-aws {
+  background: var(--aws);
+}
+/* ---------- Terminal typing ---------- */
+.term .ghost {
+  visibility: hidden;
+}
+.caret {
+  display: inline-block;
+  width: 7px;
+  height: 13px;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--spring);
+  animation: caret 1s steps(1) infinite;
+}
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Bot incident ---------- */
+.bot-screen {
+  transition: background-color 0.25s;
+}
+.bot.is-alert .bot-screen {
+  background: #4a1212;
+}
+.bot.is-alert .led {
+  background: var(--oracle);
+  animation: led-alarm 0.35s steps(1) infinite;
+}
+.bot.is-alert .led:nth-child(2) {
+  animation-delay: 0.17s;
+}
+@keyframes led-alarm {
+  50% {
+    background: #fff;
+  }
+}
+.bot.is-fixed .led {
+  background: var(--spring);
+}
+.bot-x {
+  gap: 22px;
+}
+.bot-x b {
+  font: 800 26px/1 var(--mono);
+  color: #ff6b5b;
+}
+.bot-happy i {
+  height: 10px;
+  border-radius: 10px 10px 2px 2px;
+  box-shadow: none;
+}
+
+/* ---------- Magnetic + tilt button ---------- */
+.magnetic {
+  display: inline-block;
+}
+.tilt-btn {
+  margin-top: 14px;
+  padding: 7px 12px;
+  border: 1.5px dashed var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  font: 600 11px/1 var(--mono);
+  letter-spacing: 0.04em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .caret,
+  .bot.is-alert .led {
+    animation: none;
+  }
+}
+
+/* ---------- Touch presence ---------- */
+.touch-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+.touch-ripple {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  margin: -44px 0 0 -44px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+.touch-you {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.touch-tag {
+  position: absolute;
+  right: 18px;
+  bottom: 30px;
+  height: 24px;
+  padding: 0 10px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #000;
+  border-radius: 24px 24px 0 24px;
+  font: 600 12px/1 var(--sans);
+  white-space: nowrap;
+}
+
+/* ---------- Command menu ---------- */
+.cmdk-btn {
+  display: inline-flex;
+  gap: 3px;
+  padding: 5px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #f3f4f7;
+}
+.cmdk-btn:hover {
+  background: #e9ebf0;
+}
+kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font: 600 10px/1 var(--mono);
+  color: var(--ink-2);
+}
+.cmdk-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: min(16vh, 140px) 16px 16px;
+  background: rgba(20, 22, 31, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.cmdk {
+  width: min(560px, 100%);
+  max-height: min(520px, calc(100dvh - 120px));
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
+}
+.cmdk-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1.5px solid var(--line);
+  font: 700 15px/1 var(--mono);
+}
+.cmdk-input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 500 16px/1.3 var(--sans);
+  color: var(--ink);
+}
+.cmdk-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.cmdk-group {
+  padding: 10px 10px 4px;
+  font: 700 10px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cmdk-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+.cmdk-item small {
+  font: 500 11px/1.2 var(--mono);
+  color: var(--muted);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cmdk-item.is-active {
+  background: var(--ink);
+  color: #fff;
+}
+.cmdk-item.is-active small {
+  color: #b7bbc7;
+}
+.cmdk-empty {
+  padding: 18px 10px;
+  color: var(--muted);
+}
+.cmdk-foot {
+  display: flex;
+  gap: 16px;
+  padding: 9px 14px;
+  border-top: 1.5px solid var(--line);
+  font: 500 11px/1 var(--mono);
+  color: var(--muted);
+}
+.cmdk-foot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ---------- Ticker band ---------- */
+.ticker {
+  position: relative;
+  overflow: hidden;
+  padding: 34px 0;
+  margin: 10px 0 20px;
+}
+.ticker-row {
+  width: 112%;
+  margin-left: -6%;
+  overflow: hidden;
+  border-block: 2px solid var(--ink);
+}
+.ticker-a {
+  rotate: -2.2deg;
+  background: var(--spring);
+  position: relative;
+  z-index: 1;
+}
+.ticker-b {
+  rotate: 1.8deg;
+  background: var(--ink);
+  color: #fff;
+  margin-top: 8px;
+}
+.ticker-track {
+  display: flex;
+  width: max-content;
+}
+.ticker-track span {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 11px 0 11px 18px;
+  font: 800 clamp(16px, 2.2vw, 26px) / 1 var(--display);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.ticker-track i {
+  font-style: normal;
+  font-size: 0.7em;
+  color: var(--aws);
+}
+
+/* Coverflow strip: let the first and last photos reach the centre. */
+.photo-strip {
+  padding-inline: calc(50vw - min(31vw, 140px));
+  scroll-padding-inline: calc(50vw - min(31vw, 140px));
+}
+.photo-strip-item {
+  transition: opacity 0.2s;
+  will-change: transform;
+}
+@media (max-width: 760px) {
+  .cmdk-foot {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-out-lbl,
+  .kbd-k {
+    display: none;
+  }
+  .btn-out {
+    padding: 8px 9px;
+  }
+  .nav-right {
+    gap: 6px;
+    padding-right: 8px;
+  }
+  .nav-links > button,
+  .nav-links > a {
+    padding: 0 11px;
   }
 }

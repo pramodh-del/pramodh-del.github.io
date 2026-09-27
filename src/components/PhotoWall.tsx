@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { photoSrc, photos, type Photo } from '../data/photos'
-import { DESKTOP_DRAG, useMediaQuery } from '../hooks/useMediaQuery'
+import { DESKTOP_DRAG, REDUCED_MOTION, useMediaQuery } from '../hooks/useMediaQuery'
+import { clamp } from '../lib/pointer'
 import { Lightbox } from './Lightbox'
 import { nextZ } from '../lib/pointer'
 import { Sticker } from './Sticker'
@@ -36,8 +38,40 @@ function Polaroid({ photo, eager }: { photo: Photo; eager?: boolean }) {
 export function PhotoWall() {
   const desktop = useMediaQuery(DESKTOP_DRAG)
   const wallRef = useRef<HTMLDivElement>(null)
+  const reduced = useMediaQuery(REDUCED_MOTION)
+  const stripRef = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState<number | null>(null)
   const close = useCallback(() => setOpen(null), [])
+
+  // Phone strip as a coverflow: each photo turns and shrinks by its distance from centre.
+  useEffect(() => {
+    const strip = stripRef.current
+    if (desktop || reduced || !strip) return
+    let frame = 0
+    const paint = () => {
+      const mid = window.innerWidth / 2
+      for (const el of Array.from(strip.children) as HTMLElement[]) {
+        const r = el.getBoundingClientRect()
+        const d = clamp((r.left + r.width / 2 - mid) / r.width, -1.6, 1.6)
+        const a = Math.min(Math.abs(d), 1)
+        el.style.transform = `perspective(900px) rotateY(${(-d * 24).toFixed(2)}deg) scale(${(1 - a * 0.1).toFixed(3)})`
+        el.style.zIndex = String(100 - Math.round(Math.abs(d) * 10))
+        el.style.opacity = String(1 - a * 0.25)
+      }
+    }
+    const onScroll = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(paint)
+    }
+    paint()
+    strip.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      cancelAnimationFrame(frame)
+      strip.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [desktop, reduced])
 
   if (photos.length === 0) return null
 
@@ -71,17 +105,27 @@ export function PhotoWall() {
           ))}
         </div>
       ) : (
-        <div className="photo-strip" aria-label="Photos">
+        <div ref={stripRef} className="photo-strip" aria-label="Photos">
           {photos.map((p, i) => (
-            <button key={p.id} type="button" className="photo-strip-item" onClick={() => setOpen(i)} aria-label={`Open photo ${i + 1}`}>
+            <button
+              key={p.id}
+              type="button"
+              className="photo-strip-item"
+              onClick={() => setOpen(i)}
+              aria-label={`Open photo ${i + 1}`}
+            >
               <Polaroid photo={p} eager={i < 2} />
             </button>
           ))}
         </div>
       )}
-      <AnimatePresence>
-        {open !== null && <Lightbox photos={photos} index={open} onIndex={setOpen} onClose={close} />}
-      </AnimatePresence>
+      {/* Portal to <body> so the viewer sits above the sticky nav, outside main's stacking context. */}
+      {createPortal(
+        <AnimatePresence>
+          {open !== null && <Lightbox photos={photos} index={open} onIndex={setOpen} onClose={close} />}
+        </AnimatePresence>,
+        document.body,
+      )}
     </>
   )
 }

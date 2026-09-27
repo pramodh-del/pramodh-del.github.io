@@ -3,6 +3,7 @@ import { useRef, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { offClock, profile, sideBuilds, stack } from '../data/profile'
 import { RotateLoop, ScaleLoop, Sparkle, WindupSpin } from '../components/loops'
+import { Magnetic } from '../components/Magnetic'
 import { PhotoWall } from '../components/PhotoWall'
 import { FadeUp, Tilt } from '../components/Reveal'
 import { Scribble } from '../components/Scribble'
@@ -104,7 +105,7 @@ export function OffClock() {
         </FadeUp>
         <div className="exif" aria-label="Favourite camera settings">
           {offClock.exif.map((e, i) => (
-            <Sticker key={e} className={`exif-chip exif-${i}`} rotate={[0, 3, -2][i]} bounds={ref}>
+            <Sticker key={e} className={`exif-chip exif-${i}`} rotate={[0, 3, -2][i]} bounds={ref} depth={10 + i * 8} touchDrag>
               {e}
             </Sticker>
           ))}
@@ -168,9 +169,11 @@ export function Contact() {
         <p>{profile.lookingFor}</p>
         <div className="email-row">
           <code id="email">{profile.email}</code>
-          <motion.button type="button" className="copy" onClick={copy} whileTap={{ scale: 0.92 }}>
-            Copy
-          </motion.button>
+          <Magnetic strength={0.3}>
+            <motion.button type="button" className="copy" onClick={copy} whileTap={{ scale: 0.92 }}>
+              Copy
+            </motion.button>
+          </Magnetic>
         </div>
       </div>
       <div className="dock">
@@ -180,7 +183,13 @@ export function Contact() {
         <DockLink href={profile.github} label="GitHub">
           <path d="M12 1.5a10.5 10.5 0 0 0-3.3 20.5c.5.1.7-.2.7-.5v-1.8c-2.9.6-3.5-1.4-3.5-1.4-.5-1.2-1.2-1.5-1.2-1.5-1-.7.1-.7.1-.7 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.5 1.1 3.1.9.1-.7.4-1.1.7-1.4-2.3-.3-4.8-1.2-4.8-5.2 0-1.1.4-2.1 1.1-2.8-.1-.3-.5-1.3.1-2.8 0 0 .9-.3 2.9 1.1a10 10 0 0 1 5.3 0c2-1.4 2.9-1.1 2.9-1.1.6 1.5.2 2.5.1 2.8.7.7 1.1 1.7 1.1 2.8 0 4-2.5 4.9-4.8 5.2.4.3.7 1 .7 1.9v2.9c0 .3.2.6.7.5A10.5 10.5 0 0 0 12 1.5z" />
         </DockLink>
-        <motion.button type="button" className="dock-item" onClick={copy} whileHover={{ y: -6, scale: 1.12 }} transition={{ type: 'spring', bounce: 0.5, duration: 0.35 }}>
+        <motion.button
+          type="button"
+          className="dock-item"
+          onClick={copy}
+          whileHover={{ y: -6, scale: 1.12 }}
+          transition={{ type: 'spring', bounce: 0.5, duration: 0.35 }}
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <rect x="3" y="5" width="18" height="14" rx="2" />
             <path d="m3 7 9 6 9-6" />

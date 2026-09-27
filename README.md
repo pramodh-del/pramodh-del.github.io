@@ -31,6 +31,16 @@ Every word on the site lives in `src/data/profile.ts`. Cases, stack, side builds
 | Playground | `src/pages/Playground.tsx` | Pan / zoom canvas. Throw cards; they carry their release velocity. |
 | Smooth scroll | `src/components/SmoothScroll.tsx` | Lenis. |
 
+| Scene tilt | `src/lib/scene.ts` | One -1..1 signal: the cursor on desktop, the phone's gyroscope on mobile (iOS asks first). Stickers drift in depth and lean in 3D; the name frame leans too. Shake the phone to scatter. |
+| Touch "You" | `src/components/TouchPresence.tsx` | Phones: a "You" tag follows your finger, with a ripple on every tap. |
+| Press-and-hold drag | `src/components/Sticker.tsx` | Phones: hold a sticker ~0.3s to pick it up and drag it (3D tilt, haptic tick). A quick swipe still scrolls. |
+| Coverflow | `src/components/PhotoWall.tsx` | Phones: the photo strip turns in 3D as you swipe. |
+| Ticker tape | `src/components/TickerBand.tsx` | Two crossing stack bands that speed up with scroll and reverse when you scroll up. |
+| Self-typing terminal | `src/components/TerminalCard.tsx` | Types the curl, prints the JSON, then counts your time on the page. |
+| On-call incident | `src/components/OnCallBot.tsx` | Click / tap the bot: alarm, × eyes, shake, then "resolved". |
+| Magnetic buttons | `src/components/Magnetic.tsx` | CTA, Contact and Copy pull toward the cursor. |
+| ⌘K menu | `src/components/CommandPalette.tsx` | ⌘K, Ctrl+K or `/`: jump anywhere, copy the email, open links, scatter stickers, page the bot. |
+
 Everything respects `prefers-reduced-motion`, and the custom cursor and dragging only switch on for mouse users.
 
 ## Deploy

@@ -1,4 +1,4 @@
-import { motion, useInView } from 'motion/react'
+import { motion, useInView, useSpring, useTransform } from 'motion/react'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { profile } from '../data/profile'
 import { useClock } from '../hooks/useClock'
@@ -8,10 +8,14 @@ import { OnCallBot } from '../components/OnCallBot'
 import { scrollToId, useLenis } from '../lib/lenis'
 import { Scribble } from '../components/Scribble'
 import { Icon } from '../components/Icons'
+import { Magnetic } from '../components/Magnetic'
 import { Sticker } from '../components/Sticker'
+import { TerminalCard } from '../components/TerminalCard'
+import { REDUCED_MOTION, useMediaQuery } from '../hooks/useMediaQuery'
+import { emit, INCIDENT } from '../lib/events'
+import { requestGyro, sceneX, sceneY, useGyro } from '../lib/scene'
 
 const LOOP_EASE = [0.44, 0, 0.56, 1] as const
-
 
 /** Fake multiplayer cursor that drifts on the reference's mirror loops and dodges yours. */
 function Presence({
@@ -54,6 +58,17 @@ export function Hero() {
   const [frame, setFrame] = useState({ w: 0, h: 0 })
   const { full } = useClock(profile.timeZone)
   const lenis = useLenis()
+  const gyro = useGyro()
+  const reduced = useMediaQuery(REDUCED_MOTION)
+  // The name frame leans a little toward the cursor / with the phone, like a card on a desk.
+  const nameRx = useSpring(
+    useTransform(sceneY, (v) => (reduced ? 0 : -v * 5)),
+    { stiffness: 80, damping: 16 },
+  )
+  const nameRy = useSpring(
+    useTransform(sceneX, (v) => (reduced ? 0 : v * 7)),
+    { stiffness: 80, damping: 16 },
+  )
 
   useEffect(() => {
     const el = nameRef.current
@@ -90,6 +105,7 @@ export function Hero() {
           ref={nameRef}
           className="name sel"
           data-cursor="expand"
+          style={{ rotateX: nameRx, rotateY: nameRy, transformPerspective: 1100 }}
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', bounce: 0.35, duration: 0.9, delay: 0.3 }}
@@ -132,55 +148,90 @@ export function Hero() {
           </span>{' '}
           {profile.tagline[1]}
         </motion.p>
-        <motion.button
-          type="button"
-          className="cta"
-          onClick={() => scrollToId(lenis, 'work')}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ y: -3 }}
-          whileTap={{ scale: 0.96 }}
-          transition={{ type: 'spring', bounce: 0.4, duration: 0.5, delay: 0.95 }}
-        >
-          <i aria-hidden="true">»</i>See my work
-        </motion.button>
+        <Magnetic>
+          <motion.button
+            type="button"
+            className="cta"
+            onClick={() => scrollToId(lenis, 'work')}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: 'spring', bounce: 0.4, duration: 0.5, delay: 0.95 }}
+          >
+            <i aria-hidden="true">»</i>See my work
+          </motion.button>
+        </Magnetic>
+        {gyro === 'needs-permission' && (
+          <motion.button
+            type="button"
+            className="tilt-btn"
+            onClick={() => void requestGyro()}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.3 }}
+          >
+            <span aria-hidden="true">✦</span> Turn on tilt: move your phone
+          </motion.button>
+        )}
       </div>
 
       <div className="floats">
-        <Sticker className="float terminal" style={{ left: 0, top: 380 }} rotate={-4} bounds={heroRef} label="Health check card">
-          <div className="bar" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
-          <div>
-            <span className="p">$</span> curl -s /api/pramodh/health
-          </div>
-          <div>{'{'}</div>
-          <div>
-            &nbsp;&nbsp;<span className="k">"status"</span>: <span className="s">"UP"</span>,
-          </div>
-          <div>
-            &nbsp;&nbsp;<span className="k">"java"</span>: <span className="s">21</span>,
-          </div>
-          <div>
-            &nbsp;&nbsp;<span className="k">"cloud"</span>: <span className="s">"AWS"</span>,
-          </div>
-          <div>
-            &nbsp;&nbsp;<span className="k">"promoted"</span>: <span className="s">"within 2 yrs"</span>
-          </div>
-          <div>{'}'}</div>
+        <Sticker
+          className="terminal"
+          placeClass="float"
+          place={{ left: 0, top: 380 }}
+          rotate={-4}
+          bounds={heroRef}
+          depth={18}
+          touchDrag
+          label="Health check card"
+        >
+          <TerminalCard />
         </Sticker>
-        <Sticker className="float sticker" style={{ left: '17%', top: 300, background: 'var(--spring)' }} rotate={-8} bounds={heroRef}>
+        <Sticker
+          className="sticker tone-spring"
+          placeClass="float"
+          place={{ left: '17%', top: 300 }}
+          rotate={-8}
+          bounds={heroRef}
+          depth={34}
+          touchDrag
+        >
           Currently @ Accenture
         </Sticker>
-        <Sticker className="float sticker" style={{ right: '4%', top: 190, background: 'var(--aws)' }} rotate={6} bounds={heroRef}>
+        <Sticker
+          className="sticker tone-aws"
+          placeClass="float"
+          place={{ right: '4%', top: 190 }}
+          rotate={6}
+          bounds={heroRef}
+          depth={28}
+          touchDrag
+        >
           <Icon name="cloud" size={15} /> AWS Certified Cloud Practitioner
         </Sticker>
-        <Sticker className="float note" style={{ right: 12, top: 410 }} rotate={3} bounds={heroRef}>
+        <Sticker
+          className="note"
+          placeClass="float"
+          place={{ right: 12, top: 410 }}
+          rotate={3}
+          bounds={heroRef}
+          depth={24}
+          touchDrag
+        >
           <span className="hand note-text">Promoted to Analyst in under 2 years.</span>
         </Sticker>
-        <Sticker className="float bot-sticker" style={{ left: '4%', top: 110 }} rotate={-3} bounds={heroRef} label="On-call bot">
+        <Sticker
+          placeClass="float bot-sticker"
+          place={{ left: '4%', top: 110 }}
+          rotate={-3}
+          bounds={heroRef}
+          depth={40}
+          touchDrag
+          label="On-call bot. Click to page it."
+          onActivate={() => emit(INCIDENT)}
+        >
           <OnCallBot />
         </Sticker>
         <Presence

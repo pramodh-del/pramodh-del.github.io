@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { profile } from '../data/profile'
 import { useClock } from '../hooks/useClock'
+import { emit, PALETTE } from '../lib/events'
+import { Magnetic } from './Magnetic'
 import { scrollToId, useLenis } from '../lib/lenis'
 
 const SECTIONS = [
@@ -60,15 +62,23 @@ export function Nav() {
               aria-current={current === s.id ? 'true' : undefined}
               onClick={() => go(s.id)}
             >
-              {current === s.id && <motion.span layoutId="nav-on" className="nav-on" transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }} />}
+              {current === s.id && (
+                <motion.span layoutId="nav-on" className="nav-on" transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }} />
+              )}
               <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                 {s.icon}
               </svg>
               <span className="lbl">{s.label}</span>
             </button>
           ))}
-          <Link to="/playground" className={current === 'playground' ? 'on' : ''} aria-current={current === 'playground' ? 'page' : undefined}>
-            {current === 'playground' && <motion.span layoutId="nav-on" className="nav-on" transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }} />}
+          <Link
+            to="/playground"
+            className={current === 'playground' ? 'on' : ''}
+            aria-current={current === 'playground' ? 'page' : undefined}
+          >
+            {current === 'playground' && (
+              <motion.span layoutId="nav-on" className="nav-on" transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }} />
+            )}
             <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
               <path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM11.5 9 14 11.5 11.5 14 9 11.5z" />
             </svg>
@@ -80,12 +90,18 @@ export function Nav() {
         <span className="clock" title="My local time">
           HYD <b>{hm}</b> IST
         </span>
-        <button type="button" className="btn-out" onClick={() => go('contact')}>
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-            <path d="M8 14.5 1.8 8.6A3.9 3.9 0 0 1 8 3.4a3.9 3.9 0 0 1 6.2 5.2z" />
-          </svg>
-          Contact
+        <button type="button" className="cmdk-btn" onClick={() => emit(PALETTE)} aria-label="Open command menu (Ctrl or Cmd + K)">
+          <kbd>⌘</kbd>
+          <kbd className="kbd-k">K</kbd>
         </button>
+        <Magnetic strength={0.25}>
+          <button type="button" className="btn-out" onClick={() => go('contact')} aria-label="Contact">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M8 14.5 1.8 8.6A3.9 3.9 0 0 1 8 3.4a3.9 3.9 0 0 1 6.2 5.2z" />
+            </svg>
+            <span className="btn-out-lbl">Contact</span>
+          </button>
+        </Magnetic>
       </div>
     </nav>
   )
