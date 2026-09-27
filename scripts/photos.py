@@ -1,15 +1,17 @@
 """Turn original phone photos into web-ready files for the photo wall.
 
-    python3 scripts/photos.py <folder-with-originals> [name1 name2 ...]
+    python3 scripts/photos.py [--crop-bottom 0.05] <folder-with-originals> [name1 name2 ...]
 
 For each photo (JPEG, PNG or HEIC):
   * applies the EXIF rotation, then drops ALL metadata (GPS location, device, time)
-  * never crops or upscales; keeps the original aspect ratio
+  * never upscales; keeps the aspect ratio (only --crop-bottom crops)
   * writes WebP at 640 / 1280 / 2560 px on the long edge (quality 90)
     plus a 2560 px JPEG (quality 92) as the full-quality fallback
   * records size and average colour in src/data/photos.json
 
 Pass names to pick and order photos; otherwise every photo in the folder is used.
+--crop-bottom trims that fraction off the bottom edge, e.g. to remove a phone's
+date / location stamp. It is the only crop ever applied.
 """
 
 import json
@@ -41,8 +43,13 @@ def resized(img: Image.Image, long_edge: int) -> Image.Image:
 
 
 def main() -> None:
-    src = Path(sys.argv[1])
-    picks = sys.argv[2:]
+    args = sys.argv[1:]
+    crop_bottom = 0.0
+    if args and args[0] == "--crop-bottom":
+        crop_bottom = float(args[1])
+        args = args[2:]
+    src = Path(args[0])
+    picks = args[1:]
     files = sorted(p for p in src.iterdir() if p.suffix.lower() in EXTS)
     if picks:
         by_name = {p.name: p for p in files}
@@ -53,6 +60,8 @@ def main() -> None:
     for i, path in enumerate(files, start=1):
         with Image.open(path) as raw:
             img = ImageOps.exif_transpose(raw).convert("RGB")
+        if crop_bottom:
+            img = img.crop((0, 0, img.width, round(img.height * (1 - crop_bottom))))
         slug = f"photo-{i:02d}"
         for size in SIZES:
             # Saving without exif= / icc_profile= strips all metadata.

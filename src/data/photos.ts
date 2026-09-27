@@ -17,4 +17,10 @@ const base = `${import.meta.env.BASE_URL}photos/`
 export const photoSrc = (p: Photo, size: 640 | 1280 | 2560, ext: 'webp' | 'jpg' = 'webp') => `${base}${p.id}-${size}.${ext}`
 
 export const photoSrcSet = (p: Photo) =>
-  ([640, 1280, 2560] as const).map((s) => `${photoSrc(p, s)} ${Math.round((p.width * s) / Math.max(p.width, p.height))}w`).join(', ')
+  ([640, 1280, 2560] as const)
+    .map((s) => {
+      // Files are never upscaled, so the largest one may be smaller than its name says.
+      const long = Math.max(p.width, p.height)
+      return `${photoSrc(p, s)} ${Math.round((p.width * Math.min(s, long)) / long)}w`
+    })
+    .join(', ')

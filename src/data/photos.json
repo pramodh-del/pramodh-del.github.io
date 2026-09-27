@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": "photo-01",
+    "width": 1500,
+    "height": 1900,
+    "color": "#7a93ad",
+    "alt": "A fort wall running along a knife-edge Sahyadri ridge into the haze, under a wide blue sky",
+    "caption": "up on the ridge"
+  },
+  {
+    "id": "photo-02",
+    "width": 1125,
+    "height": 1425,
+    "color": "#8a8578",
+    "alt": "Stone walls zig-zagging up a dry grassy hill to a fort bastion, hikers on the trail",
+    "caption": "the long way up"
+  },
+  {
+    "id": "photo-03",
+    "width": 1500,
+    "height": 1900,
+    "color": "#534233",
+    "alt": "A cobbled lane at night lined with hanging paper-balloon lanterns and flower boxes, Pune",
+    "caption": "lantern street, Pune"
+  },
+  {
+    "id": "photo-04",
+    "width": 1500,
+    "height": 1900,
+    "color": "#654b45",
+    "alt": "Orange and violet sunset sky over city rooftops, with parked scooters in silhouette",
+    "caption": "18:11, golden hour"
+  },
+  {
+    "id": "photo-05",
+    "width": 1500,
+    "height": 1900,
+    "color": "#58462e",
+    "alt": "Glowing hot-air-balloon lanterns hanging over a yellow courtyard seen from a walkway at night",
+    "caption": "balloons after dark"
+  }
+]
