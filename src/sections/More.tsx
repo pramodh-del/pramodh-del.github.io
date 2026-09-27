@@ -3,6 +3,7 @@ import { useRef, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { offClock, profile, sideBuilds, stack } from '../data/profile'
 import { RotateLoop, ScaleLoop, Sparkle, WindupSpin } from '../components/loops'
+import { PhotoWall } from '../components/PhotoWall'
 import { FadeUp, Tilt } from '../components/Reveal'
 import { Scribble } from '../components/Scribble'
 import { Sticker } from '../components/Sticker'
@@ -109,6 +110,7 @@ export function OffClock() {
           ))}
         </div>
       </div>
+      <PhotoWall />
     </section>
   )
 }
