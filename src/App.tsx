@@ -1,6 +1,6 @@
 import { MotionConfig } from 'motion/react'
 import { lazy, Suspense, useEffect } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { CommandPalette } from './components/CommandPalette'
 import { Cursor } from './components/Cursor'
 import { Nav } from './components/Nav'
@@ -15,6 +15,9 @@ import NotFound from './pages/NotFound'
 
 const Playground = lazy(() => import('./pages/Playground'))
 const Resume = lazy(() => import('./pages/Resume'))
+
+// Shareable links to a section of the home page, e.g. /#/work from the GitHub profile README.
+const SECTION_LINKS = ['about', 'work', 'stack', 'contact']
 
 /** Feeds the shared scene tilt: the cursor on desktop, the phone's tilt on touch screens. */
 function SceneDriver() {
@@ -61,6 +64,9 @@ export default function App() {
           <Ruler />
           <Routes>
             <Route path="/" element={<Home />} />
+            {SECTION_LINKS.map((id) => (
+              <Route key={id} path={`/${id}`} element={<Navigate to="/" replace state={{ section: id }} />} />
+            ))}
             <Route
               path="/playground"
               element={
