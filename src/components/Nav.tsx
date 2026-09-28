@@ -45,7 +45,7 @@ export function Nav() {
     else navigate('/', { state: { section: id } })
   }
 
-  const current = onHome ? active : 'playground'
+  const current = onHome ? active : pathname.slice(1)
 
   return (
     <nav className="nav" aria-label="Main">
@@ -71,6 +71,15 @@ export function Nav() {
               <span className="lbl">{s.label}</span>
             </button>
           ))}
+          <Link to="/resume" className={current === 'resume' ? 'on' : ''} aria-current={current === 'resume' ? 'page' : undefined}>
+            {current === 'resume' && (
+              <motion.span layoutId="nav-on" className="nav-on" transition={{ type: 'spring', bounce: 0.2, duration: 0.45 }} />
+            )}
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M3 1h7l3 3v11H3zM9 2v3h3M5 8h6v1H5zm0 2.5h6v1H5zm0 2.5h4v1H5z" fillRule="evenodd" />
+            </svg>
+            <span className="lbl">Resume</span>
+          </Link>
           <Link
             to="/playground"
             className={current === 'playground' ? 'on' : ''}

@@ -220,3 +220,30 @@ export const offClock = {
   text: "I'm usually the one behind the camera. Wildlife when I can get out of the city, friends when I can't, always with something loud playing.",
   exif: ['f/2.8', '1/1000s', 'ISO 200'],
 }
+
+// Public web copy of the resume: no phone number, client name kept out.
+export const resume = {
+  pdf: 'resume/Kadam_Pramodh_Resume.pdf',
+  image: (w: 1100 | 2200) => `resume/resume-p1-${w}.webp`,
+  width: 2200,
+  height: 2847,
+  updated: 'September 2026',
+}
+
+// Messages from the contact form are forwarded to the inbox by FormSubmit (formsubmit.co).
+export const contactEndpoint = `https://formsubmit.co/ajax/${profile.email}`
+
+export const now = [
+  { label: 'Currently building', value: 'An HTTP server from raw sockets in Java 21', icon: 'braces' as const },
+  { label: 'Currently learning', value: 'Kafka, and what Spring Cloud does under the hood', icon: 'bolt' as const },
+  { label: 'Inbox', value: 'Open to backend roles · replies within a day', icon: 'arrow' as const },
+]
+
+export const journey = [
+  { when: '2019', title: 'Started a B.Tech in Computer Science', detail: 'Avanthi Institute of Engineering & Technology' },
+  { when: 'May 2023', title: 'Graduated', detail: 'B.Tech, Computer Science and Engineering' },
+  { when: 'May 2024', title: 'Joined Accenture', detail: 'Associate Software Engineer, backend Java' },
+  { when: '2026', title: 'AWS Certified Cloud Practitioner', detail: 'Amazon Web Services' },
+  { when: 'Jun 2026', title: 'Promoted to Analyst', detail: 'Packaged App Development Analyst' },
+  { when: 'Now', title: 'Open to backend roles', detail: 'Hyderabad, or remote' },
+]

@@ -1,5 +1,6 @@
 import { motion, useInView, useSpring, useTransform } from 'motion/react'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
 import { profile } from '../data/profile'
 import { useClock } from '../hooks/useClock'
 import { HoverForce } from '../components/HoverForce'
@@ -148,20 +149,34 @@ export function Hero() {
           </span>{' '}
           {profile.tagline[1]}
         </motion.p>
-        <Magnetic>
-          <motion.button
-            type="button"
-            className="cta"
-            onClick={() => scrollToId(lenis, 'work')}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -3 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: 'spring', bounce: 0.4, duration: 0.5, delay: 0.95 }}
-          >
-            <i aria-hidden="true">»</i>See my work
-          </motion.button>
-        </Magnetic>
+        <div className="cta-row">
+          <Magnetic>
+            <motion.button
+              type="button"
+              className="cta"
+              onClick={() => scrollToId(lenis, 'work')}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: 'spring', bounce: 0.4, duration: 0.5, delay: 0.95 }}
+            >
+              <i aria-hidden="true">»</i>See my work
+            </motion.button>
+          </Magnetic>
+          <Magnetic strength={0.3}>
+            <motion.span
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', bounce: 0.4, duration: 0.5, delay: 1.05 }}
+              style={{ display: 'inline-block' }}
+            >
+              <Link to="/resume" className="cta-ghost">
+                <Icon name="doc" size={14} /> View resume
+              </Link>
+            </motion.span>
+          </Magnetic>
+        </div>
         {gyro === 'needs-permission' && (
           <motion.button
             type="button"

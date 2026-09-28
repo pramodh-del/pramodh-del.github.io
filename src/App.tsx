@@ -14,6 +14,7 @@ import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 
 const Playground = lazy(() => import('./pages/Playground'))
+const Resume = lazy(() => import('./pages/Resume'))
 
 /** Feeds the shared scene tilt: the cursor on desktop, the phone's tilt on touch screens. */
 function SceneDriver() {
@@ -40,7 +41,12 @@ function Footer() {
 function TitleSync() {
   const { pathname } = useLocation()
   useEffect(() => {
-    document.title = pathname === '/playground' ? 'Playground · Kadam Pramodh' : 'Kadam Pramodh · Backend Engineer'
+    document.title =
+      pathname === '/playground'
+        ? 'Playground · Kadam Pramodh'
+        : pathname === '/resume'
+          ? 'Resume · Kadam Pramodh'
+          : 'Kadam Pramodh · Backend Engineer'
   }, [pathname])
   return null
 }
@@ -60,6 +66,14 @@ export default function App() {
               element={
                 <Suspense fallback={<div className="pg-loading">loading canvas…</div>}>
                   <Playground />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/resume"
+              element={
+                <Suspense fallback={<div className="pg-loading">loading resume…</div>}>
+                  <Resume />
                 </Suspense>
               }
             />

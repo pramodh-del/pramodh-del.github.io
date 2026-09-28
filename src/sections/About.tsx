@@ -4,6 +4,7 @@ import { LineReveal, type RevealPart } from '../components/LineReveal'
 import { RotateLoop, Sparkle } from '../components/loops'
 import { FadeUp, SpringIn } from '../components/Reveal'
 import { Icon } from '../components/Icons'
+import { Journey, NowCards } from '../components/Journey'
 import { Sticker } from '../components/Sticker'
 
 const statement: RevealPart[] = [
@@ -89,6 +90,9 @@ export function About() {
           </div>
         ))}
       </FadeUp>
+
+      <NowCards />
+      <Journey />
     </section>
   )
 }

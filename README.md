@@ -14,7 +14,7 @@ npm run lint && npm run typecheck
 
 ## Edit content
 
-Every word on the site lives in `src/data/profile.ts`. Cases, stack, side builds, links and email are all there.
+Every word on the site lives in `src/data/profile.ts`. The public resume is `public/resume/` (regenerate its images and `src/data/resumeText.ts` when the PDF changes). Cases, stack, side builds, links and email are all there.
 
 ## What moves, and where
 
@@ -40,6 +40,10 @@ Every word on the site lives in `src/data/profile.ts`. Cases, stack, side builds
 | On-call incident | `src/components/OnCallBot.tsx` | Click / tap the bot: alarm, × eyes, shake, then "resolved". |
 | Magnetic buttons | `src/components/Magnetic.tsx` | CTA, Contact and Copy pull toward the cursor. |
 | ⌘K menu | `src/components/CommandPalette.tsx` | ⌘K, Ctrl+K or `/`: jump anywhere, copy the email, open links, scatter stickers, page the bot. |
+
+| Resume | `src/pages/Resume.tsx` | `/#/resume` shows the resume inside the site on any device (a sharp render of the PDF, with its text for screen readers). Download is a separate button. The public copy has no phone number and no client name. |
+| Contact form | `src/sections/Contact.tsx` | Night-sky section: "Just say hi", or "Hiring for a role" in three steps (role, details, message) on a postcard. Optional call-back. Sent through FormSubmit; if that fails, a pre-filled email opens instead. Hidden honeypot for bots. |
+| Right now + road so far | `src/components/Journey.tsx` | What I'm building and learning, and a career/education timeline whose line draws as you scroll. |
 
 Everything respects `prefers-reduced-motion`, and the custom cursor and dragging only switch on for mouse users.
 

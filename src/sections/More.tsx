@@ -1,14 +1,11 @@
 import { motion } from 'motion/react'
-import { useRef, type CSSProperties, type ReactNode } from 'react'
+import { useRef, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
-import { offClock, profile, sideBuilds, stack } from '../data/profile'
-import { RotateLoop, ScaleLoop, Sparkle, WindupSpin } from '../components/loops'
-import { Magnetic } from '../components/Magnetic'
+import { offClock, sideBuilds, stack } from '../data/profile'
 import { PhotoWall } from '../components/PhotoWall'
 import { FadeUp, Tilt } from '../components/Reveal'
 import { Scribble } from '../components/Scribble'
 import { Sticker } from '../components/Sticker'
-import { useToast } from '../lib/toast'
 
 export function SideBuilds() {
   return (
@@ -113,108 +110,5 @@ export function OffClock() {
       </div>
       <PhotoWall />
     </section>
-  )
-}
-
-export function Contact() {
-  const toast = useToast()
-
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(profile.email)
-      toast('Email copied to clipboard')
-    } catch {
-      const el = document.getElementById('email')
-      if (el) {
-        const range = document.createRange()
-        range.selectNodeContents(el)
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(range)
-      }
-      toast('Selected. Press Ctrl+C to copy')
-    }
-  }
-
-  return (
-    <section className="contact wrap" id="contact" data-section="contact">
-      <div className="contact-panel">
-        <RotateLoop className="c-spark c-spark-1">
-          <Sparkle size={26} color="var(--note)" />
-        </RotateLoop>
-        <RotateLoop className="c-spark c-spark-2" reverse>
-          <Sparkle size={18} color="var(--spring)" />
-        </RotateLoop>
-        <span className="c-dots" aria-hidden="true">
-          {([0, 1, 2, 3] as const).map((s) => (
-            <ScaleLoop key={s} step={s} className="c-dot" />
-          ))}
-        </span>
-        <motion.div
-          className="big-sticker"
-          initial={{ rotate: -16, scale: 0.8, opacity: 0 }}
-          whileInView={{ rotate: -6, scale: 1, opacity: 1 }}
-          whileHover={{ rotate: -2, scale: 1.05, transition: { type: 'spring', bounce: 0.3, duration: 0.4 } }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ type: 'spring', stiffness: 693, damping: 30, mass: 7.3 }}
-        >
-          <WindupSpin className="diamond">
-            <span>»</span>
-          </WindupSpin>
-          LET'S TALK
-          <WindupSpin className="diamond">
-            <span>»</span>
-          </WindupSpin>
-        </motion.div>
-        <p>{profile.lookingFor}</p>
-        <div className="email-row">
-          <code id="email">{profile.email}</code>
-          <Magnetic strength={0.3}>
-            <motion.button type="button" className="copy" onClick={copy} whileTap={{ scale: 0.92 }}>
-              Copy
-            </motion.button>
-          </Magnetic>
-        </div>
-      </div>
-      <div className="dock">
-        <DockLink href={profile.linkedin} label="LinkedIn">
-          <path d="M4 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM2.5 8.5h3V21h-3zM9 8.5h2.9v1.7h.1c.4-.8 1.4-1.9 3.1-1.9 3.3 0 3.9 2.2 3.9 5V21h-3v-6.8c0-1.6 0-3.7-2.3-3.7s-2.6 1.8-2.6 3.6V21H9z" />
-        </DockLink>
-        <DockLink href={profile.github} label="GitHub">
-          <path d="M12 1.5a10.5 10.5 0 0 0-3.3 20.5c.5.1.7-.2.7-.5v-1.8c-2.9.6-3.5-1.4-3.5-1.4-.5-1.2-1.2-1.5-1.2-1.5-1-.7.1-.7.1-.7 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.5 1.1 3.1.9.1-.7.4-1.1.7-1.4-2.3-.3-4.8-1.2-4.8-5.2 0-1.1.4-2.1 1.1-2.8-.1-.3-.5-1.3.1-2.8 0 0 .9-.3 2.9 1.1a10 10 0 0 1 5.3 0c2-1.4 2.9-1.1 2.9-1.1.6 1.5.2 2.5.1 2.8.7.7 1.1 1.7 1.1 2.8 0 4-2.5 4.9-4.8 5.2.4.3.7 1 .7 1.9v2.9c0 .3.2.6.7.5A10.5 10.5 0 0 0 12 1.5z" />
-        </DockLink>
-        <motion.button
-          type="button"
-          className="dock-item"
-          onClick={copy}
-          whileHover={{ y: -6, scale: 1.12 }}
-          transition={{ type: 'spring', bounce: 0.5, duration: 0.35 }}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <path d="m3 7 9 6 9-6" />
-          </svg>
-          Email
-        </motion.button>
-      </div>
-    </section>
-  )
-}
-
-function DockLink({ href, label, children }: { href: string; label: string; children: ReactNode }) {
-  return (
-    <motion.a
-      className="dock-item"
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      whileHover={{ y: -6, scale: 1.12 }}
-      transition={{ type: 'spring', bounce: 0.5, duration: 0.35 }}
-    >
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        {children}
-      </svg>
-      {label}
-    </motion.a>
   )
 }

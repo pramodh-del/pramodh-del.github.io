@@ -46,17 +46,6 @@ const scaleAt = (delay: number) => (el: HTMLElement) => {
 }
 const scaleBuilders = [scaleAt(0), scaleAt(0.1), scaleAt(0.2), scaleAt(0.3)]
 
-/** "IllusCTA": wind back, spin a full turn, overshoot, settle, rest 4s. */
-const windup = (el: HTMLElement) =>
-  gsap
-    .timeline({ repeat: -1, paused: true })
-    .to(el, { rotation: -15, duration: 0.2, ease: 'power2.out' })
-    .to(el, { rotation: 360, duration: 0.7, ease: 'power2.in' })
-    .to(el, { rotation: 367, duration: 0.2, ease: 'power2.out' })
-    .to(el, { rotation: 360, duration: 0.2, ease: 'power2.out' })
-    .set(el, { rotation: 0 })
-    .to({}, { duration: 4 })
-
 interface LoopProps {
   children?: ReactNode
   className?: string
@@ -76,15 +65,6 @@ export function ScaleLoop({ children, className, style, step = 0 }: LoopProps & 
   const ref = useOnScreenLoop(scaleBuilders[step])
   return (
     <span ref={ref} className={className} style={{ display: 'inline-block', ...style }}>
-      {children}
-    </span>
-  )
-}
-
-export function WindupSpin({ children, className, style }: LoopProps) {
-  const ref = useOnScreenLoop(windup)
-  return (
-    <span ref={ref} className={className} style={{ display: 'inline-grid', ...style }}>
       {children}
     </span>
   )

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { profile } from '../data/profile'
+import { profile, resume } from '../data/profile'
 import { emit, INCIDENT, PALETTE, SCATTER } from '../lib/events'
 import { scrollToId, useLenis } from '../lib/lenis'
 import { requestGyro, useGyro } from '../lib/scene'
@@ -45,6 +45,19 @@ export function CommandPalette() {
       { id: 'stack', label: 'Stack', hint: 'what I work with', group: 'Go to', run: go('stack') },
       { id: 'contact', label: 'Contact', hint: "let's talk", group: 'Go to', run: go('contact') },
       { id: 'playground', label: 'Playground', hint: 'throwable cards', group: 'Go to', run: () => navigate('/playground') },
+      { id: 'resume', label: 'View resume', hint: 'opens here, no download', group: 'Go to', run: () => navigate('/resume') },
+      {
+        id: 'resume-pdf',
+        label: 'Download resume (PDF)',
+        hint: 'one page',
+        group: 'Contact',
+        run: () => {
+          const a = document.createElement('a')
+          a.href = `${import.meta.env.BASE_URL}${resume.pdf}`
+          a.download = 'Kadam_Pramodh_Resume.pdf'
+          a.click()
+        },
+      },
       {
         id: 'email',
         label: 'Copy email',
